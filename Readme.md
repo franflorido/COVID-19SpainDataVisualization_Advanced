@@ -15,7 +15,7 @@ https://covid19.secuoyas.io/api/v1/es/ccaa?fecha=2020-04-01
 
 After getting the data I had to do some data cleaning in order to get them in the format I wanted. You can see the way I cleaned the data in the jupyter notebook you will find in the following directory.
 
-COVID-19SpainDataVisualization/Tarea1/JSONcleaning.ipynb
+COVID-19SpainDataVisualization_Advanced/JSONcleaning.ipynb
 
 After cleaning the data we can start performing the visualization.
 
@@ -333,11 +333,17 @@ import { stats, stats_1, ResultEntry } from "./stats";
 
 ```
 
-- After importing the dependences we are goin to buil the map::
+- After importing the dependences we are goin to buil the map and define the tooltip::
 
 _./src/index.ts_
 
 ```typescript
+const div = d3
+  .select("body")
+  .append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 100);
+
 const aProjection = d3Composite
   .geoConicConformalSpain() // Let's make the map bigger to fit in our resolution
   .scale(3300)
@@ -376,7 +382,33 @@ const updateChart = (dataset: ResultEntry[]) => {
 ### First we calculate the max cases given the year we have clicked in and we are going to scale the radius of each circunference
 
 ```typescript
+  const calculateMaxAffected = (dataset) => {
+    return dataset.reduce(
+      (max, item) => (item.value > max ? item.value : max),
+      0
+    );
+  };
   const maxAffected = calculateMaxAffected(dataset);
+  
+  const color = d3
+    .scaleThreshold<number, string>()
+    .domain([
+      0,
+      maxAffected * 0.12,
+      maxAffected * 0.2,
+      maxAffected * 0.35,
+      maxAffected * 0.7,
+      maxAffected,
+    ])
+    .range(["#FFFFFF", "#FFDCDC", "#D56C6C", "#D84343", "#D84343", "#8F0606"]);
+    
+  const assignCountryBackgroundColor = (
+    countryName: string,
+    data: ResultEntry[]
+  ) => {
+    const item = data.find((item) => item.name === countryName);
+    return item ? color(item.value) : color(0);
+  };
 
   const affectedRadiusScale = d3
     .scaleLinear()
@@ -391,8 +423,21 @@ const updateChart = (dataset: ResultEntry[]) => {
     return entry ? affectedRadiusScale(entry.value) + 5 : 0;
   };
 ```
-# Now we are going to print the circles in the map 
+# Now we are going to print the circles in the map and we are going to assign the color to each region
 ```typescript
+  svg.selectAll("path").remove();
+
+  svg
+    .selectAll("path")
+    .data(geojson["features"])
+    .enter()
+    .append("path")
+    .attr("class", "country")
+    // data loaded from json file
+    .attr("d", geoPath as any)
+    .style("fill", function (d: any) {
+      return assignCountryBackgroundColor(d.properties.NAME_1, dataset);
+    });
   svg.selectAll("circle").remove();
   svg
     .selectAll("circle")
@@ -403,6 +448,19 @@ const updateChart = (dataset: ResultEntry[]) => {
     .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, dataset))
     .attr("cx", (d) => aProjection([d.long, d.lat])[0])
     .attr("cy", (d) => aProjection([d.long, d.lat])[1]);
+    
 };
+document
+  .getElementById("Results2020")
+  .addEventListener("click", function handleResults() {
+    updateChart(stats);
+  });
+
+document
+  .getElementById("Results2021")
+  .addEventListener("click", function handleResults() {
+    updateChart(stats_1);
+  });
+
 ```
 With this done we have completed the essay! Feel free to try it and make changes!
