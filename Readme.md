@@ -324,7 +324,6 @@ Let's copy it under the following route _./src/spain.json_
 _./src/index.ts_
 
 ```typescript
-diff
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
 const spainjson = require("./spain.json");
@@ -355,7 +354,7 @@ const geoPath = d3.geoPath().projection(aProjection);
 const geojson = topojson.feature(spainjson, spainjson.objects.ESP_adm1);
 );
 ```
-Now let's create the map:
+- Now let's create the map:
 
 ```typescript
 const svg = d3
@@ -375,12 +374,12 @@ svg
   .attr("d", geoPath as any);
 ```
 
-Now that we have the map we are going to create a funcion that updates the chart every time we click the button with "updateChart" and inside it we are going to create some funcitons in order to visualice the data according to the button clicked:
+- Now that we have the map we are going to create a funcion that updates the chart every time we click the button with "updateChart" and inside it we are going to create some funcitons in order to visualice the data according to the button clicked:
 
 ```typescript
 const updateChart = (dataset: ResultEntry[]) => {
 ```
-### First we calculate the max cases given the year we have clicked in and we are going to scale the radius of each circunference
+- First we calculate the max cases given the year we have clicked in and we are going to scale the radius of each circunference
 
 ```typescript
   const calculateMaxAffected = (dataset) => {
@@ -390,7 +389,10 @@ const updateChart = (dataset: ResultEntry[]) => {
     );
   };
   const maxAffected = calculateMaxAffected(dataset);
-  
+```
+- Once we have the max Covid cases we have to create a color scale  and assign it to the region given the number of cases with the function "assignCountryBackgroundColor" we are also going to calculate the radius of the circles as we did in the previus Task.
+ 
+```typescript  
   const color = d3
     .scaleThreshold<number, string>()
     .domain([
@@ -410,7 +412,7 @@ const updateChart = (dataset: ResultEntry[]) => {
     const item = data.find((item) => item.name === countryName);
     return item ? color(item.value) : color(0);
   };
-
+  
   const affectedRadiusScale = d3
     .scaleLinear()
     .domain([0, maxAffected])
@@ -424,7 +426,7 @@ const updateChart = (dataset: ResultEntry[]) => {
     return entry ? affectedRadiusScale(entry.value) + 5 : 0;
   };
 ```
-# Now we are going to print the circles in the map and we are going to assign the color to each region
+- Now we are going to print the circles in the map and we are going to assign the color to each region
 ```typescript
   svg.selectAll("path").remove();
 
@@ -452,7 +454,8 @@ const updateChart = (dataset: ResultEntry[]) => {
     
 };
 ````
-# An to sumb up we are going to declare de buttons instance
+- To sumb up we are going to declare de buttons instance
+
 ```typescript
 document
   .getElementById("Results2020")
