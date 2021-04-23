@@ -379,7 +379,7 @@ svg
 ```typescript
 const updateChart = (dataset: ResultEntry[]) => {
 ```
-- First we calculate the max cases given the year we have clicked in and we are going to scale the radius of each circunference
+- First we calculate the max cases given the year we have clicked in
 
 ```typescript
   const calculateMaxAffected = (dataset) => {
