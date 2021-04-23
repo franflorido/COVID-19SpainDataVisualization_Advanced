@@ -9,7 +9,7 @@ In this repository im going to add some D3js data visualization of the COVID-19 
 
 ![results2021](./content/results2021.PNG "affected coronavirus 2021")
 
-In order to perform that first we had to get the actualiced .json file containig the COVID data. The data I used came from this website.
+In order to perform that we had to get the actualiced .json file containig the COVID data. The data I used came from this website.
 
 https://covid19.secuoyas.io/api/v1/es/ccaa?fecha=2020-04-01
 
