@@ -3,11 +3,11 @@ In this repository im going to add some D3js data visualization of the COVID-19 
 
 ## COVID results 2020 
 
-![2020bueno](./Tarea1/content/2020bueno.PNG "affected coronavirus 2020" ) 
+![results2020](./Tarea1/content/results2020.PNG "affected coronavirus 2020" ) 
 
 ## COVID results 2021 
 
-![2021bueno](./Tarea1/content/2021bueno.PNG "affected coronavirus 2021")
+![results2021](./Tarea1/content/results2021.PNG "affected coronavirus 2021")
 
 In order to perform that first we had to get the actualiced .json file containig the COVID data. The data I used came from this website.
 
